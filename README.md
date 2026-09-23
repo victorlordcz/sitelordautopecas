@@ -183,6 +183,21 @@ recebem o IP do visitante, e o mapa grava cookies próprios no contexto do ifram
 Isso precisa constar da política de privacidade (LGPD). Todo link externo usa
 `rel="noopener noreferrer"`.
 
+**Compromisso conhecido: o mapa e a CSP** — o Google Maps cria internamente um
+iframe `about:srcdoc`, e pela especificação esse tipo de iframe **herda a CSP da
+página que o contém**. Como a nossa não libera `'unsafe-inline'`, um script
+interno do Google é bloqueado e o navegador registra um aviso no console.
+
+Verificado no site publicado: **o mapa funciona por completo** — ficha do
+negócio, endereço, avaliação, marcador e controles. O único jeito de silenciar o
+aviso seria liberar `'unsafe-inline'` em `script-src`, o que anularia a principal
+proteção da política por um problema apenas cosmético. Fica como está, de
+propósito.
+
+Uma alternativa, se o aviso incomodar: trocar o mapa por uma imagem estática que
+só carrega o iframe quando o visitante clica. Isso também melhora a privacidade,
+porque o Google passa a receber o IP apenas de quem optou por ver o mapa.
+
 ---
 
 ## Acessibilidade
