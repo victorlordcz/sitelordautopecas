@@ -59,7 +59,9 @@ const jsonLd = JSON.stringify(dadosEstruturados).replace(/</g, '\\u003c');
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
+    {/* A tag <meta name="generator"> foi removida de propósito: ela anunciava
+        a versão exata do framework, o que só serve para quem procura alvos
+        com falha conhecida. Não faz falta nenhuma para o site. */}
 
     <title>{titulo}</title>
     <meta name="description" content={descricao} />

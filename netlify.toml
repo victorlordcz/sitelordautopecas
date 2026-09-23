@@ -8,6 +8,8 @@
 
 [build.environment]
   # Versão do Node usada para montar o site no Netlify.
+  # O Astro 7 exige Node >= 22.12. O valor "22" faz o Netlify usar sempre a
+  # última 22.x, que atende o requisito e continua recebendo correções.
   NODE_VERSION = "22"
 
 # Os cabeçalhos de segurança e de cache NÃO ficam aqui.

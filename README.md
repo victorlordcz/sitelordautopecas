@@ -151,6 +151,39 @@ sem efeito de hover em todo cartão. Tudo respeita `prefers-reduced-motion`.
 
 ---
 
+## Segurança
+
+O site não tem backend, banco de dados, formulário, login nem cookies próprios.
+Não coleta nem processa dado algum do visitante: o contato acontece fora do site,
+no WhatsApp. Isso elimina a maior parte das classes de vulnerabilidade — mas não
+todas.
+
+**Cabeçalhos** — `dist/_headers` é gerado a cada build por
+[`scripts/gerar-headers.mjs`](scripts/gerar-headers.mjs), com CSP,
+`X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`,
+`Cross-Origin-Opener-Policy` e HSTS.
+
+A CSP é estrita: `script-src 'self'` mais o **hash** dos scripts embutidos, sem
+`'unsafe-inline'`. O hash é calculado do HTML recém-gerado, então nunca sai de
+sincronia com o código — escrito à mão, ele quebraria em produção sem aviso.
+
+**Serialização do JSON-LD** — `JSON.stringify` não escapa `<`. Um texto contendo
+`</script>`, colado sem querer no endereço, fecharia a tag do JSON-LD antes da
+hora e o restante viraria script executável. Por isso
+[`Layout.astro`](src/layouts/Layout.astro) escapa `<` como `<` antes de
+injetar — continua JSON válido e o Google lê igual.
+
+**URL do mapa** — [`Contato.astro`](src/components/Contato.astro) só aceita o
+endereço do iframe se começar com `https:`, para que uma URL colada por engano
+(`javascript:`, `data:`) não vire execução de código.
+
+**Terceiros** — o site carrega o Google Fonts e embute o mapa do Google. Ambos
+recebem o IP do visitante, e o mapa grava cookies próprios no contexto do iframe.
+Isso precisa constar da política de privacidade (LGPD). Todo link externo usa
+`rel="noopener noreferrer"`.
+
+---
+
 ## Acessibilidade
 
 - Contraste **AA** em todas as combinações de cor, verificado por cálculo de
