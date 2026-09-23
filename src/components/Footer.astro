@@ -1,0 +1,172 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-lord-auto-pecas.jpg';
+import { menu, empresa, contato, redes, linkWhatsapp, linkInstagram } from '../data/site';
+
+const whatsapp = linkWhatsapp();
+const instagram = linkInstagram();
+const ano = new Date().getFullYear();
+---
+
+<footer class="rodape on-black">
+  <div class="wrap">
+    <div class="rodape__topo">
+      <div>
+        <Image
+          src={logo}
+          alt={`Logotipo da ${empresa.nome}`}
+          width={160}
+          height={160}
+          loading="lazy"
+          class="rodape__logo"
+        />
+        <p class="rodape__desc">
+          Autopeças, chapeação e materiais para pintura automotiva.
+        </p>
+      </div>
+
+      <nav aria-label="Navegação do rodapé">
+        <h2 class="rodape__titulo">Navegue</h2>
+        <ul class="rodape__links">
+          {
+            menu.map((item) => (
+              <li>
+                <a href={item.href}>{item.texto}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="rodape__titulo">Contato</h2>
+        <a class="rodape__fone" href={whatsapp} target="_blank" rel="noopener noreferrer">
+          {contato.whatsapp.exibicao}
+        </a>
+        {contato.endereco && <p class="rodape__endereco">{contato.endereco}</p>}
+        {
+          instagram && (
+            <a class="rodape__rede" href={instagram} target="_blank" rel="noopener noreferrer">
+              @{redes.instagram.replace(/^@/, '')}
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="rodape__base">
+      <p class="rodape__assinatura">{empresa.assinatura}</p>
+      <p class="rodape__copy">© {ano} {empresa.nome}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .rodape {
+    background: var(--black);
+    color: var(--on-black-muted);
+    padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;
+    border-top: 1px solid var(--rule-dark);
+  }
+
+  .rodape__topo {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    padding-bottom: clamp(2.25rem, 4vw, 3rem);
+  }
+
+  /* Sobre o preto do rodapé o logo se funde: nada de recorte. */
+  .rodape__logo {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 1rem;
+  }
+
+  .rodape__desc {
+    max-width: 30ch;
+    font-size: 0.97rem;
+    line-height: 1.6;
+  }
+
+  .rodape__titulo {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--on-black);
+    margin-bottom: 1rem;
+  }
+
+  .rodape__links {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .rodape__links a {
+    font-size: 0.97rem;
+    transition: color 0.18s var(--ease);
+  }
+
+  .rodape__links a:hover {
+    color: var(--on-black);
+  }
+
+  .rodape__fone {
+    display: inline-block;
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    color: var(--on-black);
+    border-bottom: 2px solid var(--yellow);
+    padding-bottom: 2px;
+  }
+
+  .rodape__endereco {
+    margin-top: 0.9rem;
+    max-width: 30ch;
+    font-size: 0.97rem;
+    line-height: 1.6;
+  }
+
+  .rodape__rede {
+    display: inline-block;
+    margin-top: 0.9rem;
+    margin-right: 1rem;
+    font-size: 0.97rem;
+    border-bottom: 1px solid #4a4a4a;
+    transition: border-color 0.18s var(--ease);
+  }
+
+  .rodape__rede:hover {
+    border-bottom-color: var(--yellow);
+  }
+
+  /* --- Base --- */
+  .rodape__base {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--rule-dark);
+  }
+
+  .rodape__assinatura {
+    font-family: var(--font-head);
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: 0.015em;
+    color: var(--on-black);
+  }
+
+  .rodape__copy {
+    font-size: 0.88rem;
+  }
+
+  @media (min-width: 720px) {
+    .rodape__topo {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1.1fr);
+    }
+  }
+</style>

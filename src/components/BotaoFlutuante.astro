@@ -1,0 +1,61 @@
+---
+import { linkWhatsapp } from '../data/site';
+import IconeWhatsapp from './IconeWhatsapp.astro';
+
+const whatsapp = linkWhatsapp();
+---
+
+<a
+  class="flutuante"
+  href={whatsapp}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Falar com a Lord Auto Peças no WhatsApp"
+>
+  <IconeWhatsapp tamanho={32} />
+</a>
+
+<style>
+  .flutuante {
+    position: fixed;
+    right: clamp(1rem, 3vw, 2rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    /* Respeita a barra de gestos do iPhone. */
+    bottom: calc(clamp(1rem, 3vw, 2rem) + env(safe-area-inset-bottom, 0px));
+    z-index: 90;
+
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+
+    /* Verde oficial do WhatsApp, redondo, só o símbolo. */
+    background: #25d366;
+    color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.26);
+
+    transition: background-color 0.18s var(--ease);
+  }
+
+  .flutuante:hover {
+    background: #1fb855;
+  }
+
+  .flutuante:focus-visible {
+    outline-offset: 4px;
+  }
+
+  @media (min-width: 900px) {
+    .flutuante {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flutuante {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,17 @@
+# dependências
+node_modules/
+
+# build (o Netlify gera isso sozinho a cada publicação)
+dist/
+.astro/
+
+# ambiente
+.env
+.env.production
+
+# Netlify
+.netlify/
+
+# sistema
+.DS_Store
+Thumbs.db

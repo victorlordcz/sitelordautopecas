@@ -1,0 +1,299 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-lord-auto-pecas.jpg';
+import { menu, empresa, linkWhatsapp } from '../data/site';
+
+const whatsapp = linkWhatsapp();
+---
+
+<header class="cabecalho on-black" data-cabecalho>
+  <div class="wrap cabecalho__inner">
+    <a href="#inicio" class="marca" aria-label={`${empresa.nome} — ir para o início`}>
+      <Image
+        src={logo}
+        alt={`Logotipo da ${empresa.nome}`}
+        width={96}
+        height={96}
+        loading="eager"
+        class="marca__logo"
+      />
+      <span class="marca__nome">Lord Auto Peças</span>
+    </a>
+
+    <nav class="nav" aria-label="Navegação principal">
+      <ul>
+        {
+          menu.map((item) => (
+            <li>
+              <a href={item.href}>{item.texto}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a class="btn btn--primary cabecalho__cta" href={whatsapp} target="_blank" rel="noopener noreferrer">
+      Fale conosco
+    </a>
+
+    <button
+      class="hamburguer"
+      type="button"
+      aria-label="Abrir menu"
+      aria-expanded="false"
+      aria-controls="menu-mobile"
+      data-abrir-menu
+    >
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<div class="menu-mobile on-black" id="menu-mobile" hidden data-menu-mobile>
+  <div class="menu-mobile__topo wrap">
+    <span class="menu-mobile__nome">Lord Auto Peças</span>
+    <button class="menu-mobile__fechar" type="button" aria-label="Fechar menu" data-fechar-menu>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18"></path>
+      </svg>
+    </button>
+  </div>
+
+  <nav class="wrap" aria-label="Navegação do menu">
+    <ul class="menu-mobile__lista">
+      {
+        menu.map((item) => (
+          <li>
+            <a href={item.href} data-link-menu>{item.texto}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <div class="wrap menu-mobile__acao">
+    <a class="btn btn--primary btn--block" href={whatsapp} target="_blank" rel="noopener noreferrer" data-link-menu>
+      Fale conosco
+    </a>
+  </div>
+</div>
+
+<style>
+  .cabecalho {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--black);
+    border-bottom: 1px solid var(--rule-dark);
+  }
+
+  .cabecalho__inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    min-height: 72px;
+  }
+
+  /* --- Marca --- */
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-right: auto;
+  }
+
+  /* O logo tem fundo preto proprio: sobre a barra preta ele se funde,
+     entao nao precisa de recorte nenhum. */
+  .marca__logo {
+    width: 46px;
+    height: 46px;
+  }
+
+  .marca__nome {
+    font-family: var(--font-head);
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.015em;
+    color: var(--on-black);
+    white-space: nowrap;
+  }
+
+  /* --- Navegação --- */
+  .nav {
+    display: none;
+  }
+
+  .nav ul {
+    display: flex;
+    align-items: center;
+    gap: 1.9rem;
+  }
+
+  .nav a {
+    position: relative;
+    display: block;
+    padding-block: 0.4rem;
+    font-size: 0.97rem;
+    color: var(--on-black-muted);
+    transition: color 0.18s var(--ease);
+  }
+
+  .nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--yellow);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s var(--ease);
+  }
+
+  .nav a:hover {
+    color: var(--on-black);
+  }
+
+  .nav a:hover::after {
+    transform: scaleX(1);
+  }
+
+  .cabecalho__cta {
+    display: none;
+    padding: 0.7rem 1.35rem;
+    font-size: 1rem;
+  }
+
+  /* --- Hambúrguer --- */
+  .hamburguer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    width: 44px;
+    height: 44px;
+    padding: 0 9px;
+    margin-right: -9px;
+  }
+
+  .hamburguer span {
+    display: block;
+    height: 2px;
+    background: var(--on-black);
+  }
+
+  .hamburguer span:last-child {
+    background: var(--yellow);
+  }
+
+  /* --- Menu do celular --- */
+  .menu-mobile {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    padding-block: 0 2.5rem;
+    background: var(--black);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .menu-mobile[hidden] {
+    display: none;
+  }
+
+  .menu-mobile__topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 72px;
+    border-bottom: 1px solid var(--rule-dark);
+  }
+
+  .menu-mobile__nome {
+    font-family: var(--font-head);
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.015em;
+    color: var(--on-black);
+  }
+
+  .menu-mobile__fechar {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -11px;
+    color: var(--on-black);
+  }
+
+  .menu-mobile__lista a {
+    display: block;
+    padding: 1.15rem 0;
+    font-family: var(--font-head);
+    font-size: 1.75rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: var(--on-black);
+    border-bottom: 1px solid var(--rule-dark);
+  }
+
+  .menu-mobile__acao {
+    margin-top: 2rem;
+  }
+
+  :global(body.menu-aberto) {
+    overflow: hidden;
+  }
+
+  @media (min-width: 900px) {
+    .nav,
+    .cabecalho__cta {
+      display: flex;
+    }
+
+    .hamburguer {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const menu = document.querySelector<HTMLElement>('[data-menu-mobile]');
+  const abrir = document.querySelector<HTMLButtonElement>('[data-abrir-menu]');
+  const fecharBtn = document.querySelector<HTMLButtonElement>('[data-fechar-menu]');
+
+  if (menu && abrir) {
+    const abrirMenu = () => {
+      menu.hidden = false;
+      abrir.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('menu-aberto');
+      fecharBtn?.focus();
+    };
+
+    const fecharMenu = () => {
+      menu.hidden = true;
+      abrir.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('menu-aberto');
+    };
+
+    abrir.addEventListener('click', abrirMenu);
+    fecharBtn?.addEventListener('click', fecharMenu);
+
+    menu.querySelectorAll('[data-link-menu]').forEach((link) => {
+      link.addEventListener('click', fecharMenu);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) fecharMenu();
+    });
+
+    // Se a tela virar "computador" com o menu aberto, fecha para liberar a rolagem.
+    window.matchMedia('(min-width: 900px)').addEventListener('change', (e) => {
+      if (e.matches && !menu.hidden) fecharMenu();
+    });
+  }
+</script>

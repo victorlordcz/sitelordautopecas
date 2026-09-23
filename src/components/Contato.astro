@@ -1,0 +1,271 @@
+---
+import { contato, contatoSecao, redes, mapa, linkWhatsapp, linkInstagram } from '../data/site';
+import IconeWhatsapp from './IconeWhatsapp.astro';
+
+const whatsapp = linkWhatsapp();
+const instagram = linkInstagram();
+
+/* Em desenvolvimento (npm run dev) aparece um lembrete nos campos vazios.
+   No site publicado (npm run build) eles somem, para o site nunca mostrar
+   informação inventada. */
+const emDesenvolvimento = import.meta.env.DEV;
+
+const infos = [
+  {
+    rotulo: 'Endereço',
+    valor: contato.endereco,
+    href: contato.endereco
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contato.endereco)}`
+      : '',
+    dica: "Preencha 'endereco' em src/data/site.ts",
+  },
+  {
+    rotulo: 'Horário de funcionamento',
+    valor: contato.horarios.join('\n'),
+    href: '',
+    dica: "Preencha 'horarios' em src/data/site.ts",
+    // Quebra 'Segunda: 7h às 19h' em dia + horário, para virar tabela.
+    // Se a linha não tiver ':', ela aparece inteira, sem quebrar.
+    linhas: contato.horarios.map((l) => {
+      const i = l.indexOf(':');
+      return i > -1 ? { dia: l.slice(0, i).trim(), hora: l.slice(i + 1).trim() } : { dia: l, hora: '' };
+    }),
+  },
+  {
+    rotulo: 'Instagram',
+    valor: redes.instagram ? `@${redes.instagram.replace(/^@/, '')}` : '',
+    href: instagram,
+    dica: "Preencha 'instagram' em src/data/site.ts",
+  },
+];
+
+const infosVisiveis = emDesenvolvimento ? infos : infos.filter((i) => i.valor);
+---
+
+<section class="section section--black on-black" id="contato">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>{contatoSecao.titulo}</h2>
+      <p>{contatoSecao.texto}</p>
+    </div>
+
+    <div class:list={['contato', { 'contato--solo': infosVisiveis.length === 0 }]}>
+      <div class="contato__principal">
+        <a class="contato__numero" href={whatsapp} target="_blank" rel="noopener noreferrer">
+          {contato.whatsapp.exibicao}
+        </a>
+        <p class="contato__nota">
+          A conversa abre com a mensagem já escrita. É só enviar.
+        </p>
+        <a class="btn btn--primary" href={whatsapp} target="_blank" rel="noopener noreferrer">
+          <IconeWhatsapp tamanho={20} />
+          {contatoSecao.botao}
+        </a>
+      </div>
+
+      {
+        infosVisiveis.length > 0 && (
+          <dl class="contato__dados">
+            {infosVisiveis.map((info) => (
+              <div class="contato__linha">
+                <dt>{info.rotulo}</dt>
+                <dd>
+                  {info.valor && info.linhas && (
+                    <ul class="horarios">
+                      {info.linhas.map((l) => (
+                        <li>
+                          <span>{l.dia}</span>
+                          {l.hora && <span class="horarios__hora">{l.hora}</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {info.valor && !info.linhas && info.href && (
+                    <a
+                      href={info.href}
+                      target={info.href.startsWith('http') ? '_blank' : undefined}
+                      rel={info.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    >
+                      {info.valor}
+                    </a>
+                  )}
+                  {info.valor && !info.linhas && !info.href && <span>{info.valor}</span>}
+                  {!info.valor && <span class="contato__pendente">{info.dica}</span>}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+    </div>
+
+    {
+      mapa.embedUrl && (
+        <div class="contato__mapa">
+          <iframe
+            src={mapa.embedUrl}
+            title="Mapa com a localização da Lord Auto Peças"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          />
+        </div>
+      )
+    }
+
+    {
+      !mapa.embedUrl && emDesenvolvimento && (
+        <p class="contato__mapa-pendente">
+          Mapa não configurado. Preencha <code>mapa.embedUrl</code> em{' '}
+          <code>src/data/site.ts</code> — o passo a passo está nos comentários do arquivo. Este
+          aviso não aparece no site publicado.
+        </p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .contato {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  /* --- Número em destaque --- */
+  .contato__numero {
+    display: inline-block;
+    font-family: var(--font-head);
+    font-size: clamp(2.6rem, 1.7rem + 4vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.005em;
+    color: var(--on-black);
+    border-bottom: 3px solid var(--yellow);
+    padding-bottom: 0.35rem;
+    transition: color 0.18s var(--ease);
+  }
+
+  .contato__numero:hover {
+    color: var(--yellow);
+  }
+
+  .contato__nota {
+    margin-block: 1.25rem 2rem;
+    max-width: 34ch;
+    color: var(--on-black-muted);
+  }
+
+  /* --- Demais dados --- */
+  .contato__dados {
+    margin: 0;
+  }
+
+  .contato__linha {
+    display: grid;
+    gap: 0.2rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--rule-dark);
+  }
+
+  .contato__linha:last-child {
+    border-bottom: 1px solid var(--rule-dark);
+  }
+
+  .contato__dados dt {
+    font-size: 0.9rem;
+    color: var(--on-black-muted);
+  }
+
+  .contato__dados dd {
+    margin: 0;
+    font-size: 1.0625rem;
+    color: var(--on-black);
+    white-space: pre-line; /* respeita as linhas do horário */
+  }
+
+  /* Horário como tabela: dia à esquerda, hora à direita. */
+  .horarios {
+    display: grid;
+    gap: 0.3rem;
+    max-width: 22rem;
+  }
+
+  .horarios li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 1rem;
+  }
+
+  /* Pontilhado ligando o dia ao horário, como numa tabela impressa. */
+  .horarios li::after {
+    content: '';
+    order: 1;
+    flex: 1;
+    height: 0;
+    border-bottom: 1px dotted #4a4a4a;
+    transform: translateY(-0.25em);
+  }
+
+  .horarios__hora {
+    order: 2;
+    color: var(--on-black-muted);
+    white-space: nowrap;
+  }
+
+  .contato__dados dd a {
+    border-bottom: 1px solid #4a4a4a;
+    transition: border-color 0.18s var(--ease);
+  }
+
+  .contato__dados dd a:hover {
+    border-bottom-color: var(--yellow);
+  }
+
+  /* Lembrete que só aparece durante o desenvolvimento */
+  .contato__pendente {
+    color: var(--yellow);
+    font-size: 0.95rem;
+  }
+
+  /* --- Mapa --- */
+  .contato__mapa {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    line-height: 0;
+    border: 1px solid var(--rule-dark);
+  }
+
+  .contato__mapa iframe {
+    width: 100%;
+    height: clamp(260px, 40vw, 400px);
+    border: 0;
+  }
+
+  .contato__mapa-pendente {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    padding: 1.25rem 1.5rem;
+    border: 1px dashed #4a4a4a;
+    font-size: 0.95rem;
+    color: var(--yellow);
+  }
+
+  .contato__mapa-pendente code {
+    font-size: 0.92em;
+    color: var(--on-black);
+  }
+
+  @media (min-width: 880px) {
+    .contato {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(2.5rem, 6vw, 5rem);
+      align-items: start;
+    }
+
+    /* Sem os demais dados preenchidos, não deixa metade da seção vazia. */
+    .contato--solo {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

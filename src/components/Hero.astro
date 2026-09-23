@@ -1,0 +1,233 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-lord-auto-pecas.jpg';
+import { hero, empresa, servicos, contato, linkWhatsapp } from '../data/site';
+import IconeWhatsapp from './IconeWhatsapp.astro';
+
+const whatsapp = linkWhatsapp();
+---
+
+<section class="hero" id="inicio">
+  <div class="hero__split">
+    <div class="hero__texto">
+      <h1>{hero.titulo}</h1>
+
+      <p class="hero__lead">{hero.texto}</p>
+
+      <div class="hero__acoes">
+        <a class="btn btn--primary" href={whatsapp} target="_blank" rel="noopener noreferrer">
+          <IconeWhatsapp tamanho={20} />
+          {hero.botaoPrincipal}
+        </a>
+        <a class="hero__fone" href={whatsapp} target="_blank" rel="noopener noreferrer">
+          {contato.whatsapp.exibicao}
+        </a>
+      </div>
+    </div>
+
+    <!-- Bloco preto: o logo tem fundo preto próprio, então encaixa
+         exatamente, sem recorte e sem borda visível. -->
+    <div class="hero__marca">
+      <Image
+        src={logo}
+        alt={`Logotipo da ${empresa.nome}, desde ${empresa.desde}`}
+        width={620}
+        height={620}
+        loading="eager"
+        fetchpriority="high"
+        class="hero__logo"
+      />
+    </div>
+  </div>
+
+  <!-- Índice das áreas de atuação: serve de navegação e já responde
+       "vocês trabalham com o que eu preciso?" -->
+  <nav class="hero__indice" aria-label="Áreas de atuação">
+    <ul class="wrap">
+      {
+        servicos.itens.map((item) => (
+          <li>
+            <a href="#servicos">{item.titulo}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</section>
+
+<style>
+  .hero {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .hero__split {
+    display: grid;
+    /* No celular o bloco da marca vem primeiro, compacto. */
+    grid-template-areas:
+      'marca'
+      'texto';
+  }
+
+  .hero__texto {
+    grid-area: texto;
+    padding: clamp(2.5rem, 7vw, 5.5rem) var(--gutter) clamp(2.75rem, 6vw, 4.5rem);
+    max-width: var(--wrap);
+    margin-inline: auto;
+    width: 100%;
+    animation: surgir 0.55s var(--ease) both;
+  }
+
+  .hero h1 {
+    max-width: 15ch;
+  }
+
+  .hero__lead {
+    max-width: 52ch;
+    margin-top: 1.5rem;
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .hero__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.75rem;
+    margin-top: 2.25rem;
+  }
+
+  /* O número é o segundo caminho de contato, em texto de verdade. */
+  .hero__fone {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 400; /* Anton tem um peso só */
+    letter-spacing: 0.005em;
+    color: var(--ink);
+    border-bottom: 2px solid var(--yellow);
+    padding-bottom: 2px;
+  }
+
+  .hero__fone:hover {
+    border-bottom-color: var(--ink);
+  }
+
+  /* --- Bloco da marca ---
+     O corte diagonal vem das listras inclinadas do logo. É o único
+     elemento inclinado da página inteira: usado uma vez, com força. */
+  .hero__marca {
+    grid-area: marca;
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: clamp(1.25rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2.5rem)
+      clamp(2.5rem, 7vw, 3.5rem);
+    animation: surgir 0.55s var(--ease) both;
+  }
+
+  .hero__marca::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--black);
+    /* No celular a diagonal fica na base do bloco. */
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 89%);
+  }
+
+  .hero__logo {
+    position: relative; /* acima do bloco preto */
+    width: min(40vw, 155px);
+    height: auto;
+  }
+
+  /* --- Faixa-índice --- */
+  .hero__indice {
+    border-top: 1px solid var(--rule);
+  }
+
+  .hero__indice ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero__indice a {
+    display: block;
+    padding: 1.05rem 0;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--ink);
+    transition: color 0.18s var(--ease);
+  }
+
+  .hero__indice li {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .hero__indice li:nth-child(odd) {
+    padding-right: 1rem;
+  }
+
+  .hero__indice a:hover {
+    color: var(--muted);
+  }
+
+  @media (min-width: 860px) {
+    .hero__indice ul {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .hero__indice li {
+      border-bottom: 0;
+      border-left: 1px solid var(--rule);
+      padding-left: 1rem;
+    }
+
+    .hero__indice li:first-child {
+      border-left: 0;
+      padding-left: 0;
+    }
+
+    .hero__indice li:nth-child(odd) {
+      padding-right: 0;
+    }
+  }
+
+  /* --- Divisão vertical no computador --- */
+  @media (min-width: 900px) {
+    .hero__split {
+      grid-template-areas: 'texto marca';
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.62fr);
+      align-items: stretch;
+    }
+
+    .hero__texto {
+      /* Alinha com a coluna do site, mas deixa o bloco preto sangrar
+         até a borda direita da tela. */
+      padding-left: max(var(--gutter), (100vw - var(--wrap)) / 2 + var(--gutter));
+      padding-right: clamp(2rem, 4vw, 4rem);
+      padding-block: clamp(4rem, 8vw, 7rem);
+      margin-inline: 0;
+      max-width: none;
+      align-self: center;
+      animation-delay: 0.08s;
+    }
+
+    .hero__marca {
+      /* Espaço extra à esquerda para o logo não encostar na diagonal. */
+      padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3rem)
+        clamp(3.5rem, 7vw, 6rem);
+    }
+
+    .hero__marca::before {
+      /* No computador a diagonal vira a borda esquerda do bloco,
+         inclinada para a frente como o itálico do logo. */
+      clip-path: polygon(17% 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .hero__logo {
+      width: min(27vw, 340px);
+    }
+  }
+</style>

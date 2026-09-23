@@ -1,0 +1,98 @@
+---
+import { seo, empresa, contato, redes, linkInstagram } from '../data/site';
+import '../styles/global.css';
+
+interface Props {
+  titulo?: string;
+  descricao?: string;
+}
+
+const { titulo = seo.titulo, descricao = seo.descricao } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/logo-lord-auto-pecas.jpg', Astro.site);
+
+/* Dados estruturados para o Google entender que isto é uma loja de autopeças.
+   Só inclui endereço/horário/redes quando esses campos foram preenchidos
+   em src/data/site.ts — nada é inventado. */
+const perfis = [linkInstagram()].filter(Boolean);
+
+const dadosEstruturados: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'AutoPartsStore',
+  name: empresa.nome,
+  description: seo.descricao,
+  foundingDate: empresa.desde,
+  url: canonical.href,
+  image: ogImage.href,
+  telephone: `+${contato.whatsapp.numeroInternacional}`,
+};
+
+if (perfis.length) dadosEstruturados.sameAs = perfis;
+if (contato.endereco) {
+  const endereco: Record<string, string> = {
+    '@type': 'PostalAddress',
+    streetAddress: contato.endereco,
+    addressCountry: 'BR',
+  };
+  if (contato.cidade) endereco.addressLocality = contato.cidade;
+  if (contato.uf) endereco.addressRegion = contato.uf;
+  dadosEstruturados.address = endereco;
+}
+
+/* O Google só entende horário no formato 'Mo-Sa 07:00-19:00'.
+   O texto em português continua aparecendo normalmente na página. */
+if (contato.horarioGoogle) {
+  dadosEstruturados.openingHours = contato.horarioGoogle;
+}
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <meta name="keywords" content={seo.palavrasChave} />
+    <meta name="author" content={empresa.nome} />
+    <meta name="theme-color" content="#000000" />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Ícone da aba do navegador -->
+    <link rel="icon" href="/logo-lord-auto-pecas.jpg" type="image/jpeg" />
+    <link rel="apple-touch-icon" href="/logo-lord-auto-pecas.jpg" />
+
+    <!-- Como o link aparece no WhatsApp, Facebook e Instagram -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={empresa.nome} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="640" />
+    <meta property="og:image:height" content="640" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titulo} />
+    <meta name="twitter:description" content={descricao} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Asap:wght@400;500;600;700&display=swap"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(dadosEstruturados)} />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <slot />
+  </body>
+</html>

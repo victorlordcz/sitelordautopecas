@@ -1,0 +1,116 @@
+---
+import { sobre, empresa } from '../data/site';
+---
+
+<section class="section section--mist" id="sobre">
+  <div class="wrap sobre">
+    <div class="sobre__cabeca">
+      <h2>{sobre.titulo}</h2>
+      <p class="sobre__anos">
+        <strong>{new Date().getFullYear() - Number(empresa.desde)}</strong> anos de atividade
+      </p>
+    </div>
+
+    <div class="sobre__corpo">
+      {sobre.paragrafos.map((p) => <p>{p}</p>)}
+    </div>
+
+    <dl class="sobre__pilares">
+      {
+        sobre.pilares.map((pilar) => (
+          <div>
+            <dt>{pilar.titulo}</dt>
+            <dd>{pilar.texto}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .sobre {
+    display: grid;
+    gap: clamp(2.25rem, 5vw, 4.5rem);
+  }
+
+  /* --- Cabeça: título + tempo de atividade --- */
+  .sobre__anos {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--yellow);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    color: var(--body);
+  }
+
+  .sobre__anos strong {
+    display: block;
+    font-family: var(--font-head);
+    font-size: clamp(3.5rem, 2.5rem + 3.8vw, 5rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: 0.005em;
+    color: var(--ink);
+  }
+
+  /* --- Texto --- */
+  .sobre__corpo p {
+    max-width: 62ch;
+    font-size: 1.075rem;
+    line-height: 1.7;
+  }
+
+  .sobre__corpo p + p {
+    margin-top: 1.1rem;
+  }
+
+  .sobre__corpo p:first-child {
+    font-size: clamp(1.2rem, 1.1rem + 0.45vw, 1.4rem);
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  /* --- Três pontos de apoio --- */
+  .sobre__pilares {
+    display: grid;
+    gap: 1.75rem;
+    margin: 0;
+    padding-top: clamp(2rem, 4vw, 2.5rem);
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .sobre__pilares dt {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .sobre__pilares dd {
+    margin: 0;
+    font-size: 0.99rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  @media (min-width: 720px) {
+    .sobre__pilares {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  @media (min-width: 980px) {
+    .sobre {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+
+    /* Os três pontos atravessam as duas colunas, fechando a seção. */
+    .sobre__pilares {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
