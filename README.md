@@ -10,6 +10,7 @@ Estático, sem backend, com todo o conteúdo editável em um único arquivo.
 [![CSS](https://img.shields.io/badge/CSS_puro-sem_framework-264DE4?style=flat-square&logo=css3&logoColor=white)](#decisões-de-projeto)
 [![JavaScript](https://img.shields.io/badge/JavaScript-0,68_KB-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](#desempenho)
 [![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=flat-square&logo=netlify&logoColor=white)](https://netlify.com)
+[![Licença MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-green?style=flat-square)](LICENSE)
 
 </div>
 
@@ -360,6 +361,21 @@ O site informa, sem tentar ser simpático. Ao reescrever qualquer parte, vale ma
 
 ---
 
-<div align="center">
-<sub>Logotipo e informações da loja pertencem à Lord Auto Peças.</sub>
-</div>
+## Licença
+
+O **código** deste projeto está sob a licença [MIT](LICENSE) — pode ser usado,
+copiado, modificado e redistribuído livremente, inclusive como base para outro
+site.
+
+A licença **não cobre a marca**. Estão fora dela:
+
+| Fora da licença MIT | Onde está |
+| --- | --- |
+| Logotipo da Lord Auto Peças | `logo empresa.jpg`, `public/`, `src/assets/` |
+| Imagens de prévia que exibem o logotipo | `docs/` |
+| Nome, identidade visual e dados da loja | — |
+
+Esses itens pertencem à Lord Auto Peças e não podem ser reutilizados. Para
+aproveitar o projeto como modelo, substitua o logotipo pelo seu e ajuste
+[`src/data/site.ts`](src/data/site.ts) — é o único arquivo com informações da
+empresa.
