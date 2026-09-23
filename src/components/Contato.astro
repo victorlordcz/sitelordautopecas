@@ -10,6 +10,11 @@ const instagram = linkInstagram();
    informação inventada. */
 const emDesenvolvimento = import.meta.env.DEV;
 
+/* O endereço do mapa é colado à mão em src/data/site.ts. Só aceitamos
+   https: para que uma URL colada por engano (javascript:, data:) não vire
+   execução de código dentro do iframe. Fora desse formato, o mapa some. */
+const urlMapa = /^https:\/\//i.test(mapa.embedUrl.trim()) ? mapa.embedUrl.trim() : '';
+
 const infos = [
   {
     rotulo: 'Endereço',
@@ -101,10 +106,10 @@ const infosVisiveis = emDesenvolvimento ? infos : infos.filter((i) => i.valor);
     </div>
 
     {
-      mapa.embedUrl && (
+      urlMapa && (
         <div class="contato__mapa">
           <iframe
-            src={mapa.embedUrl}
+            src={urlMapa}
             title="Mapa com a localização da Lord Auto Peças"
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
@@ -115,7 +120,7 @@ const infosVisiveis = emDesenvolvimento ? infos : infos.filter((i) => i.valor);
     }
 
     {
-      !mapa.embedUrl && emDesenvolvimento && (
+      !urlMapa && emDesenvolvimento && (
         <p class="contato__mapa-pendente">
           Mapa não configurado. Preencha <code>mapa.embedUrl</code> em{' '}
           <code>src/data/site.ts</code> — o passo a passo está nos comentários do arquivo. Este

@@ -45,6 +45,13 @@ if (contato.endereco) {
 if (contato.horarioGoogle) {
   dadosEstruturados.openingHours = contato.horarioGoogle;
 }
+
+/* Serializa o JSON-LD de forma segura.
+   `JSON.stringify` NÃO escapa "<". Sem isto, um texto que contenha
+   "</script>" — colado sem querer no endereço, por exemplo — fecharia esta
+   tag antes da hora e o que viesse depois seria executado como script.
+   Escapar "<" como < continua sendo JSON válido e o Google lê igual. */
+const jsonLd = JSON.stringify(dadosEstruturados).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -88,7 +95,7 @@ if (contato.horarioGoogle) {
       href="https://fonts.googleapis.com/css2?family=Anton&family=Asap:wght@400;500;600;700&display=swap"
     />
 
-    <script type="application/ld+json" set:html={JSON.stringify(dadosEstruturados)} />
+    <script type="application/ld+json" set:html={jsonLd} />
   </head>
 
   <body>
