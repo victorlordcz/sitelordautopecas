@@ -20,6 +20,8 @@ export const empresa = {
   desde: '1989',
   // Frase curta que aparece no rodapé e nas buscas do Google.
   assinatura: 'Lord Auto Peças — desde 1989',
+  // Resumo do que a loja vende. Aparece no rodapé.
+  resumo: 'Autopeças, tintas e materiais para chapeação e pintura automotiva.',
 };
 
 /* --------------------------------------------------------------------------
@@ -100,7 +102,10 @@ export const menu = [
 
 // --- Apresentação principal (topo da página) ---
 export const hero = {
-  titulo: `Autopeças, chapeação e pintura automotiva desde ${empresa.desde}`,
+  /* "materiais para" vale para chapeação e para pintura: a loja vende os
+     itens, não presta o serviço. Dizer só "chapeação" dava a entender
+     que havia oficina aqui. */
+  titulo: `Autopeças e materiais para chapeação e pintura desde ${empresa.desde}`,
   texto:
     'Atendemos motoristas, oficinas e profissionais de chapeação e pintura.',
   botaoPrincipal: 'Falar no WhatsApp',
@@ -110,9 +115,10 @@ export const hero = {
 export const sobre = {
   titulo: 'Sobre nós',
   paragrafos: [
-    'A Lord Auto Peças está em atividade desde 1989, atendendo quem precisa de peças e materiais para o veículo.',
+    'A Lord Auto Peças é uma loja familiar, em atividade desde 1989, atendendo quem precisa de peças e materiais para o veículo.',
     'A loja atende motoristas, oficinas e profissionais de chapeação e pintura, com autopeças, materiais para funilaria, tintas e produtos para pintura automotiva.',
     'Você não precisa saber o nome exato da peça. Descreva o que está acontecendo com o veículo e a equipe ajuda a identificar o que você precisa.',
+    'E quando a peça não está aqui, indicamos onde você pode encontrá-la.',
   ],
   pilares: [
     {
@@ -145,7 +151,7 @@ export const servicos = {
     },
     {
       icone: 'martelo',
-      titulo: 'Chapeação',
+      titulo: 'Itens para chapeação',
       texto: 'Materiais para funilaria e recuperação da lataria do veículo.',
     },
     {
